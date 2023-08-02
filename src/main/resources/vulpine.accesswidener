@@ -1,0 +1,33 @@
+accessWidener	v1	named
+accessible method net/minecraft/entity/passive/FoxEntity getTrustedUuids ()Ljava/util/List;
+accessible method net/minecraft/entity/passive/FoxEntity addTrustedUuid (Ljava/util/UUID;)V
+accessible method net/minecraft/entity/passive/FoxEntity setSleeping (Z)V
+accessible method net/minecraft/entity/passive/FoxEntity addTypeSpecificGoals ()V
+accessible class net/minecraft/entity/passive/FoxEntity$MateGoal
+accessible field net/minecraft/entity/ai/goal/AnimalMateGoal animal Lnet/minecraft/entity/passive/AnimalEntity;
+accessible field net/minecraft/entity/ai/goal/AnimalMateGoal mate Lnet/minecraft/entity/passive/AnimalEntity;
+accessible field net/minecraft/entity/passive/FoxEntity followChickenAndRabbitGoal Lnet/minecraft/entity/ai/goal/Goal;
+accessible field net/minecraft/entity/passive/FoxEntity followBabyTurtleGoal Lnet/minecraft/entity/ai/goal/Goal;
+accessible field net/minecraft/entity/passive/FoxEntity followFishGoal Lnet/minecraft/entity/ai/goal/Goal;
+accessible field net/minecraft/entity/mob/MobEntity goalSelector Lnet/minecraft/entity/ai/goal/GoalSelector;
+accessible field net/minecraft/entity/mob/MobEntity targetSelector Lnet/minecraft/entity/ai/goal/GoalSelector;
+accessible class net/minecraft/entity/passive/FoxEntity$FoxSwimGoal
+accessible class net/minecraft/entity/passive/FoxEntity$StopWanderingGoal
+accessible class net/minecraft/entity/passive/FoxEntity$EscapeWhenNotAggressiveGoal
+accessible class net/minecraft/entity/passive/FoxEntity$MoveToHuntGoal
+accessible class net/minecraft/entity/passive/FoxEntity$JumpChasingGoal
+accessible class net/minecraft/entity/passive/FoxEntity$AvoidDaylightGoal
+accessible class net/minecraft/entity/passive/FoxEntity$AttackGoal
+accessible class net/minecraft/entity/passive/FoxEntity$DelayedCalmDownGoal
+accessible class net/minecraft/entity/passive/FoxEntity$FollowParentGoal
+accessible class net/minecraft/entity/passive/FoxEntity$GoToVillageGoal
+accessible class net/minecraft/entity/passive/FoxEntity$EatBerriesGoal
+accessible class net/minecraft/entity/passive/FoxEntity$PickupItemGoal
+accessible class net/minecraft/entity/passive/FoxEntity$LookAtEntityGoal
+accessible class net/minecraft/entity/passive/FoxEntity$SitDownAndLookAroundGoal
+accessible class net/minecraft/entity/passive/FoxEntity$DefendFriendGoal
+accessible field net/minecraft/entity/passive/FoxEntity JUST_ATTACKED_SOMETHING_FILTER Ljava/util/function/Predicate;
+accessible field net/minecraft/entity/passive/FoxEntity NOTICEABLE_PLAYER_FILTER Ljava/util/function/Predicate;
+accessible method net/minecraft/entity/passive/FoxEntity isAggressive ()Z
+accessible method net/minecraft/entity/passive/FoxEntity canTrust (Ljava/util/UUID;)Z
+accessible field net/minecraft/entity/passive/FoxEntity OWNER Lnet/minecraft/entity/data/TrackedData;
