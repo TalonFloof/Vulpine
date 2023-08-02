@@ -24,7 +24,7 @@ import sh.talonfox.vulpine.FoxSitGoal;
 import sh.talonfox.vulpine.Vulpine;
 
 @Mixin(FoxEntity.MateGoal.class)
-@Debug(export = true)
+@SuppressWarnings("unused")
 public class FoxEntityMateGoalMixin {
     @Inject(method = "breed", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;spawnEntityAndPassengers(Lnet/minecraft/entity/Entity;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     public void increaseTameProgress(CallbackInfo ci, ServerWorld serverWorld, FoxEntity foxEntity) {

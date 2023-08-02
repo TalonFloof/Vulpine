@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import sh.talonfox.vulpine.Vulpine;
 
 @Mixin(FoxEntity.GoToVillageGoal.class)
+@SuppressWarnings("unused")
 public class FoxEntityGotoVillageGoalMixin {
     @Inject(method = "canStart", at = @At("RETURN"), cancellable = true)
     public void canStart(CallbackInfoReturnable<Boolean> cir) {

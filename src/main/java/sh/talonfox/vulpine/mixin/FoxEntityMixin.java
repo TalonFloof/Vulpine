@@ -37,7 +37,7 @@ Tame Stages:
  */
 
 @Mixin(FoxEntity.class)
-@Debug(export = true)
+@SuppressWarnings("unused")
 public abstract class FoxEntityMixin extends AnimalEntity {
     protected FoxEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
