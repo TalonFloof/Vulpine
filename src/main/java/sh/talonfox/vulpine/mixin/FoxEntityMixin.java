@@ -1,19 +1,31 @@
 package sh.talonfox.vulpine.mixin;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import sh.talonfox.vulpine.FoxFollowPlayerGoal;
+import sh.talonfox.vulpine.FoxSitGoal;
 import sh.talonfox.vulpine.Vulpine;
 
 import java.util.Objects;
+import java.util.UUID;
+
+import static net.minecraft.entity.passive.FoxEntity.OWNER;
 
 /*
 Tame Stages:
@@ -26,7 +38,10 @@ Tame Stages:
 
 @Mixin(FoxEntity.class)
 @Debug(export = true)
-public abstract class FoxEntityMixin {
+public abstract class FoxEntityMixin extends AnimalEntity {
+    protected FoxEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
+        super(entityType, world);
+    }
 
     @Inject(at = @At("TAIL"), method = "initDataTracker()V")
     protected void addTameProgressTracker(CallbackInfo ci) {
@@ -38,9 +53,23 @@ public abstract class FoxEntityMixin {
         nbt.putInt("TameProgress", ((FoxEntity) (Object) this).getDataTracker().get(Vulpine.TAME_PROGRESS));
     }
 
+    @Unique
+    public ActionResult interactMob(PlayerEntity player, Hand hand) {
+        ActionResult actionResult = super.interactMob(player,hand);
+        if(actionResult.isAccepted()) return actionResult;
+        UUID uuid = ((FoxEntity)(Object)this).getDataTracker().get(OWNER).orElse(null);
+        if (((FoxEntity)(Object)this).getDataTracker().get(Vulpine.TAME_PROGRESS) != 4 || !player.getUuid().equals(uuid)) return ActionResult.PASS;
+        ((FoxEntity)(Object)this).setSitting(!((FoxEntity)(Object)this).isSitting());
+        this.jumping = false;
+        this.navigation.stop();
+        this.setTarget(null);
+        return ActionResult.SUCCESS;
+    }
+
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
     public void tameProgressLoad(NbtCompound nbt, CallbackInfo ci) {
         ((FoxEntity) (Object) this).getDataTracker().set(Vulpine.TAME_PROGRESS,nbt.getInt("TameProgress"));
+        Vulpine.addFoxGoals(((FoxEntity) (Object) this),nbt.getInt("TameProgress"));
     }
 
     @Inject(method = "initGoals", at = @At("HEAD"), cancellable = true)
@@ -49,27 +78,16 @@ public abstract class FoxEntityMixin {
         ((FoxEntity) (Object) this).followBabyTurtleGoal = new ActiveTargetGoal<TurtleEntity>(((FoxEntity) (Object) this), TurtleEntity.class, 10, false, false, entity -> TurtleEntity.BABY_TURTLE_ON_LAND_FILTER.test((LivingEntity)entity) && ((FoxEntity) (Object) this).getDataTracker().get(Vulpine.TAME_PROGRESS) < 3);
         ((FoxEntity) (Object) this).followFishGoal = new ActiveTargetGoal<FishEntity>(((FoxEntity) (Object) this), FishEntity.class, 20, false, false, entity -> entity instanceof SchoolingFishEntity && ((FoxEntity) (Object) this).getDataTracker().get(Vulpine.TAME_PROGRESS) < 3);
         ((FoxEntity) (Object) this).goalSelector.add(0, ((FoxEntity) (Object) this).new FoxSwimGoal());
-        ((FoxEntity) (Object) this).goalSelector.add(0, new PowderSnowJumpGoal(((FoxEntity) (Object) this), ((FoxEntity) (Object) this).getWorld()));
-        ((FoxEntity) (Object) this).goalSelector.add(1, ((FoxEntity) (Object) this).new StopWanderingGoal());
-        ((FoxEntity) (Object) this).goalSelector.add(2, ((FoxEntity) (Object) this).new EscapeWhenNotAggressiveGoal(2.2));
         ((FoxEntity) (Object) this).goalSelector.add(3, ((FoxEntity) (Object) this).new MateGoal(1.0));
-        ((FoxEntity) (Object) this).goalSelector.add(4, new FleeEntityGoal<PlayerEntity>(((FoxEntity) (Object) this), PlayerEntity.class, 16.0f, 1.6, 1.4, entity -> FoxEntity.NOTICEABLE_PLAYER_FILTER.test((Entity)entity) && ((FoxEntity) (Object) this).getDataTracker().get(Vulpine.TAME_PROGRESS) < 3 && (((FoxEntity) (Object) this).getDataTracker().get(Vulpine.TAME_PROGRESS) == 2 ? !Objects.equals(((FoxEntity) (Object) this).getDataTracker().get(FoxEntity.OWNER).orElse(null), entity.getUuid()) : !((FoxEntity) (Object) this).canTrust(entity.getUuid())) && !((FoxEntity) (Object) this).isAggressive()));
-        ((FoxEntity) (Object) this).goalSelector.add(4, new FleeEntityGoal<WolfEntity>(((FoxEntity) (Object) this), WolfEntity.class, 8.0f, 1.6, 1.4, entity -> !((WolfEntity)entity).isTamed() && !((FoxEntity) (Object) this).isAggressive()));
-        ((FoxEntity) (Object) this).goalSelector.add(4, new FleeEntityGoal<PolarBearEntity>(((FoxEntity) (Object) this), PolarBearEntity.class, 8.0f, 1.6, 1.4, entity -> !((FoxEntity) (Object) this).isAggressive()));
-        ((FoxEntity) (Object) this).goalSelector.add(5, ((FoxEntity) (Object) this).new MoveToHuntGoal());
         ((FoxEntity) (Object) this).goalSelector.add(6, ((FoxEntity) (Object) this).new JumpChasingGoal());
-        ((FoxEntity) (Object) this).goalSelector.add(6, ((FoxEntity) (Object) this).new AvoidDaylightGoal(1.25));
-        ((FoxEntity) (Object) this).goalSelector.add(7, ((FoxEntity) (Object) this).new AttackGoal((double)1.2f, true));
-        ((FoxEntity) (Object) this).goalSelector.add(7, ((FoxEntity) (Object) this).new DelayedCalmDownGoal());
-        ((FoxEntity) (Object) this).goalSelector.add(8, ((FoxEntity) (Object) this).new FollowParentGoal(((FoxEntity) (Object) this), 1.25));
-        ((FoxEntity) (Object) this).goalSelector.add(9, ((FoxEntity) (Object) this).new GoToVillageGoal(32, 200));
-        ((FoxEntity) (Object) this).goalSelector.add(10, ((FoxEntity) (Object) this).new EatBerriesGoal((double)1.2f, 12, 1));
-        ((FoxEntity) (Object) this).goalSelector.add(10, new PounceAtTargetGoal(((FoxEntity) (Object) this), 0.4f));
-        ((FoxEntity) (Object) this).goalSelector.add(11, new WanderAroundFarGoal(((FoxEntity) (Object) this), 1.0));
         ((FoxEntity) (Object) this).goalSelector.add(11, ((FoxEntity) (Object) this).new PickupItemGoal());
         ((FoxEntity) (Object) this).goalSelector.add(12, ((FoxEntity) (Object) this).new LookAtEntityGoal(((FoxEntity) (Object) this), PlayerEntity.class, 24.0f));
-        ((FoxEntity) (Object) this).goalSelector.add(13, ((FoxEntity) (Object) this).new SitDownAndLookAroundGoal());
-        ((FoxEntity) (Object) this).targetSelector.add(3, ((FoxEntity) (Object) this).new DefendFriendGoal(LivingEntity.class, false, false, entity -> FoxEntity.JUST_ATTACKED_SOMETHING_FILTER.test((Entity)entity) && !((FoxEntity) (Object) this).canTrust(entity.getUuid())));
+        ((FoxEntity) (Object) this).goalSelector.add(7, ((FoxEntity) (Object) this).new AttackGoal((double) 1.2f, true));
+        ((FoxEntity) (Object) this).goalSelector.add(4, new FleeEntityGoal<WolfEntity>(((FoxEntity) (Object) this), WolfEntity.class, 8.0f, 1.6, 1.4, entity -> !((WolfEntity) entity).isTamed() && !((FoxEntity) (Object) this).isAggressive()));
+        ((FoxEntity) (Object) this).goalSelector.add(4, new FleeEntityGoal<PolarBearEntity>(((FoxEntity) (Object) this), PolarBearEntity.class, 8.0f, 1.6, 1.4, entity -> !((FoxEntity) (Object) this).isAggressive()));
+        ((FoxEntity) (Object) this).goalSelector.add(10, new PounceAtTargetGoal(((FoxEntity) (Object) this), 0.4f));
+        ((FoxEntity) (Object) this).goalSelector.add(11, new WanderAroundFarGoal(((FoxEntity) (Object) this), 1.0));
+        ((FoxEntity) (Object) this).targetSelector.add(3, ((FoxEntity) (Object) this).new DefendFriendGoal(LivingEntity.class, false, false, entity -> FoxEntity.JUST_ATTACKED_SOMETHING_FILTER.test((Entity) entity) && !((FoxEntity) (Object) this).canTrust(entity.getUuid())));
         ci.cancel();
     }
 }
