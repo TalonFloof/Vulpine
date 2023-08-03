@@ -3,6 +3,7 @@
   "package": "sh.talonfox.vulpine.mixin.client",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "FoxEntityModelMixin",
     "FoxEntityRendererMixin"
   ],
   "injectors": {

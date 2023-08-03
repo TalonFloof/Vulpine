@@ -6,23 +6,24 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeKeys;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import sh.talonfox.vulpine.FoxFollowPlayerGoal;
-import sh.talonfox.vulpine.FoxSitGoal;
 import sh.talonfox.vulpine.Vulpine;
 
-import java.util.Objects;
 import java.util.UUID;
 
 import static net.minecraft.entity.passive.FoxEntity.OWNER;
@@ -89,5 +90,39 @@ public abstract class FoxEntityMixin extends AnimalEntity {
         ((FoxEntity) (Object) this).goalSelector.add(11, new WanderAroundFarGoal(((FoxEntity) (Object) this), 1.0));
         ((FoxEntity) (Object) this).targetSelector.add(3, ((FoxEntity) (Object) this).new DefendFriendGoal(LivingEntity.class, false, false, entity -> FoxEntity.JUST_ATTACKED_SOMETHING_FILTER.test((Entity) entity) && !((FoxEntity) (Object) this).canTrust(entity.getUuid())));
         ci.cancel();
+    }
+
+    @Redirect(method = "initialize", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/passive/FoxEntity$Type;fromBiome(Lnet/minecraft/registry/entry/RegistryEntry;)Lnet/minecraft/entity/passive/FoxEntity$Type;"))
+    public FoxEntity.Type setFoxVariant(RegistryEntry<Biome> biome) {
+        FoxEntity fox = FoxEntity.class.cast(this);
+        Identifier id = biome.getKey().get().getValue();
+        if(id.equals(BiomeKeys.OLD_GROWTH_PINE_TAIGA.getValue()) || id.equals(BiomeKeys.OLD_GROWTH_SPRUCE_TAIGA.getValue())) {
+            int variant = Random.create().nextInt(9);
+            if(variant < 5) {
+                return Vulpine.GRAY_FOX;
+            } else if(variant < 7) {
+                return FoxEntity.Type.RED;
+            } else if(variant < 8) {
+                return Vulpine.SILVER_FOX;
+            } else {
+                return Vulpine.CROSS_FOX;
+            }
+        } else if(biome.isIn(BiomeTags.SPAWNS_SNOW_FOXES)) {
+            int variant = Random.create().nextInt(5);
+            if(variant < 4) {
+                return FoxEntity.Type.SNOW;
+            } else {
+                return Vulpine.SILVER_FOX;
+            }
+        } else {
+            int variant = Random.create().nextInt(9);
+            if(variant < 5) {
+                return FoxEntity.Type.RED;
+            } else if(variant < 7) {
+                return Vulpine.SILVER_FOX;
+            } else {
+                return Vulpine.CROSS_FOX;
+            }
+        }
     }
 }
