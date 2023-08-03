@@ -16,7 +16,6 @@ import static sh.talonfox.vulpine.Vulpine.foxes;
 public abstract class FoxTypeMixin implements IFoxTypeCreator {
     @Invoker("<init>")
     private static FoxEntity.Type makeVariant(String enumName, int ordinal, int id, String typeName) {
-        Vulpine.LOGGER.error("oh shit");
         throw new AssertionError();
     }
 
