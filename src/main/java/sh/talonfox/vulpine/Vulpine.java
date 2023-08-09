@@ -13,6 +13,7 @@ import net.minecraft.entity.passive.FoxEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.recipe.Ingredient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,9 @@ public class Vulpine implements ModInitializer {
 			entity.goalSelector.add(0, new PowderSnowJumpGoal(entity, entity.getWorld()));
 			entity.goalSelector.add(1, entity.new StopWanderingGoal());
 			entity.goalSelector.add(2, entity.new EscapeWhenNotAggressiveGoal(2.2));
-			entity.goalSelector.add(4, new FleeEntityGoal<PlayerEntity>(entity, PlayerEntity.class, 16.0f, 1.6, 1.4, e -> FoxEntity.NOTICEABLE_PLAYER_FILTER.test((Entity)e) && entity.getDataTracker().get(Vulpine.TAME_PROGRESS) < 3 && entity.getDataTracker().get(Vulpine.TAME_PROGRESS) == 2 ? !Objects.equals(entity.getDataTracker().get(FoxEntity.OWNER).orElse(null), e.getUuid()) : !entity.canTrust(e.getUuid()) && !entity.isAggressive()));
+			if(tameProgress < 3) {
+				entity.goalSelector.add(4, new FleeEntityGoal<PlayerEntity>(entity, PlayerEntity.class, 16.0f, 1.6, 1.4, e -> !e.isSneaky() && !EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(e) && !entity.canTrust(e.getUuid()) && !entity.isAggressive()));
+			}
 			entity.goalSelector.add(5, entity.new MoveToHuntGoal());
 			entity.goalSelector.add(7, entity.new DelayedCalmDownGoal());
 			entity.goalSelector.add(8, entity.new FollowParentGoal(entity, 1.25));
