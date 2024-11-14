@@ -23,17 +23,22 @@ import java.util.Objects;
 
 public class Vulpine implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("vulpine");
-	public static final TrackedData<Integer> TAME_PROGRESS = DataTracker.registerData(net.minecraft.entity.passive.FoxEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	public static final TrackedData<Integer> TAME_PROGRESS = DataTracker.registerData(FoxEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
 	public static FoxEntity.Type SILVER_FOX = null;
 	public static FoxEntity.Type GRAY_FOX = null;
 	public static FoxEntity.Type CROSS_FOX = null;
-	public static ArrayList<FoxEntity.Type> foxes = null;
+	public static ArrayList<FoxEntity.Type> foxes = new ArrayList<>();
+	static {
+		foxes.add(FoxEntity.Type.RED);
+		foxes.add(FoxEntity.Type.SNOW);
+	}
 
 	@Override
 	public void onInitialize() {
 
 	}
+
 
 	public static void addFoxGoals(FoxEntity entity, int tameProgress) {
 		if(tameProgress == 4) {

@@ -115,7 +115,7 @@ public class FoxFollowPlayerGoal extends Goal {
     }
 
     private boolean canTeleportTo(BlockPos pos) {
-        PathNodeType pathNodeType = LandPathNodeMaker.getLandNodeType(this.fop.getWorld(), pos.mutableCopy());
+        PathNodeType pathNodeType = LandPathNodeMaker.getLandNodeType(fop, pos.mutableCopy());
         if (pathNodeType != PathNodeType.WALKABLE) {
             return false;
         }

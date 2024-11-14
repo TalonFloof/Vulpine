@@ -9,6 +9,7 @@ import sh.talonfox.vulpine.Vulpine;
 
 import java.util.ArrayList;
 
+import static sh.talonfox.vulpine.Vulpine.SILVER_FOX;
 import static sh.talonfox.vulpine.Vulpine.foxes;
 
 @SuppressWarnings("unused")
@@ -19,16 +20,16 @@ public abstract class FoxTypeMixin implements IFoxTypeCreator {
         throw new AssertionError();
     }
 
+
     /**
      * @author TalonFox
      * @reason To allow us to add new fox variants
      */
     @Overwrite
     public static FoxEntity.Type[] values() {
-        if(foxes == null) {
-            foxes = new ArrayList<>();
-            foxes.add(FoxEntity.Type.RED);
-            foxes.add(FoxEntity.Type.SNOW);
+        //don't remove this line. It's a hacky way to ensure that TrackedData regiser in correct order.
+        FoxEntity.toGrowUpAge(0);
+        if(Vulpine.SILVER_FOX == null) {
             Vulpine.SILVER_FOX = IFoxTypeCreator.class.cast(FoxEntity.Type.RED).vulpine$newFoxVariant("SILVER",2,2, "silver");
             Vulpine.GRAY_FOX = IFoxTypeCreator.class.cast(FoxEntity.Type.RED).vulpine$newFoxVariant("GRAY",3,3, "gray");
             Vulpine.CROSS_FOX = IFoxTypeCreator.class.cast(FoxEntity.Type.RED).vulpine$newFoxVariant("CROSS",4,4, "cross");
