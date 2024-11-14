@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -22,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import sh.talonfox.vulpine.Vulpine;
 
 import java.util.UUID;
@@ -44,9 +46,9 @@ public abstract class FoxEntityMixin extends AnimalEntity {
         super(entityType, world);
     }
 
-    @Inject(at = @At("TAIL"), method = "initDataTracker()V")
-    protected void addTameProgressTracker(CallbackInfo ci) {
-        ((FoxEntity) (Object) this).getDataTracker().startTracking(Vulpine.TAME_PROGRESS, 0);
+    @Inject(at = @At("TAIL"), method = "initDataTracker", locals = LocalCapture.CAPTURE_FAILHARD)
+    protected void addTameProgressTracker(DataTracker.Builder builder, CallbackInfo ci) {
+        builder.add(Vulpine.TAME_PROGRESS, 0);
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
