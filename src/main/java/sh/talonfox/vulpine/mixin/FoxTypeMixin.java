@@ -27,18 +27,9 @@ public abstract class FoxTypeMixin implements IFoxTypeCreator {
      */
     @Overwrite
     public static FoxEntity.Type[] values() {
+        //don't remove this line. It's a hacky way to ensure that TrackedData regiser in correct order.
         FoxEntity.toGrowUpAge(0);
         if(Vulpine.SILVER_FOX == null) {
-            /*foxes = new ArrayList<>();
-            foxes.add(FoxEntity.Type.RED);
-            foxes.add(FoxEntity.Type.SNOW);
-            Vulpine.SILVER_FOX = IFoxTypeCreator.class.cast(FoxEntity.Type.RED).vulpine$newFoxVariant("SILVER",2,2, "silver");
-            Vulpine.GRAY_FOX = IFoxTypeCreator.class.cast(FoxEntity.Type.RED).vulpine$newFoxVariant("GRAY",3,3, "gray");
-            Vulpine.CROSS_FOX = IFoxTypeCreator.class.cast(FoxEntity.Type.RED).vulpine$newFoxVariant("CROSS",4,4, "cross");
-            foxes.add(Vulpine.SILVER_FOX);
-            foxes.add(Vulpine.GRAY_FOX);
-            foxes.add(Vulpine.CROSS_FOX);
-            FoxVariantTexture.init();*/
             Vulpine.SILVER_FOX = IFoxTypeCreator.class.cast(FoxEntity.Type.RED).vulpine$newFoxVariant("SILVER",2,2, "silver");
             Vulpine.GRAY_FOX = IFoxTypeCreator.class.cast(FoxEntity.Type.RED).vulpine$newFoxVariant("GRAY",3,3, "gray");
             Vulpine.CROSS_FOX = IFoxTypeCreator.class.cast(FoxEntity.Type.RED).vulpine$newFoxVariant("CROSS",4,4, "cross");
@@ -47,11 +38,11 @@ public abstract class FoxTypeMixin implements IFoxTypeCreator {
             foxes.add(Vulpine.CROSS_FOX);
             FoxVariantTexture.init();
         }
-        //FoxEntity.Type[] fops = new FoxEntity.Type[foxes.size()];
-        //for(FoxEntity.Type fop : foxes) {
-        //    fops[fop.getId()] = fop;
-        //}
-        return foxes.stream().toArray(FoxEntity.Type[]::new);
+        FoxEntity.Type[] fops = new FoxEntity.Type[foxes.size()];
+        for(FoxEntity.Type fop : foxes) {
+            fops[fop.getId()] = fop;
+        }
+        return fops;
     }
 
     public FoxEntity.Type vulpine$newFoxVariant(String enumName, int ordinal, int id, String typeName) {
