@@ -19,6 +19,9 @@
 		],
 		"client": [
 			"sh.talonfox.vulpine.VulpineClient"
+		],
+		"fabric-datagen": [
+			"sh.talonfox.vulpine.datagen.ModDataGenerator"
 		]
 	},
 	"mixins": [
