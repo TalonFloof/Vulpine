@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityData;
 import net.minecraft.entity.passive.FoxEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.registry.tag.EntityTypeTags;
@@ -70,7 +71,8 @@ public abstract class FoxVariantSelector {
     }
 
     private static boolean shouldSpawnMonster(World foxWorld){
-        boolean shouldSpawnMonster = foxWorld.getDimension().equals(DimensionTypes.OVERWORLD);
+        DimensionType dim = foxWorld.getDimensionEntry().value();
+        boolean shouldSpawnMonster = foxWorld.getRegistryKey() == World.OVERWORLD;
         shouldSpawnMonster = shouldSpawnMonster & foxWorld.isNight();
         return shouldSpawnMonster & rand.nextInt(100)<15; //15% to spawn monster version at night in overwolrd.
     }

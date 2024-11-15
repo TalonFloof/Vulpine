@@ -104,8 +104,10 @@ public abstract class FoxEntityMixin extends AnimalEntity {
         return FoxVariantSelector.selectFoxVariant(fox,biome);
     }
 
-    @Inject(method = "canSpawn", at = @At("HEAD"))
+    @Inject(method = "canSpawn", at = @At("HEAD"), cancellable = true)
     private static void vulpine$overideFoxSpawnRestrictions(EntityType<FoxEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random, CallbackInfoReturnable<Boolean> cir){
-        cir.setReturnValue(world.getBlockState(pos.down()).isIn(BlockTags.FOXES_SPAWNABLE_ON));
+        boolean validPos = world.getBlockState(pos.down()).isIn(BlockTags.FOXES_SPAWNABLE_ON);
+        cir.cancel();
+        cir.setReturnValue(validPos);
     }
 }

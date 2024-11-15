@@ -2,8 +2,11 @@ package sh.talonfox.vulpine.world.generation;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.*;
+import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.passive.AxolotlEntity;
+import net.minecraft.entity.passive.FoxEntity;
+import net.minecraft.world.Heightmap;
 import sh.talonfox.vulpine.registry.ModMobTags;
 
 /**
@@ -22,7 +25,7 @@ public class ModEntityGeneration {
                 EntityType.FOX,35,2,4);
 
         BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_ENDER_FOX), SpawnGroup.MONSTER,
-                EntityType.FOX,25,2,4);
+                EntityType.FOX,5,2,4);
 
         BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_SCULK_FOX), SpawnGroup.MONSTER,
                 EntityType.FOX,10,1,2);
