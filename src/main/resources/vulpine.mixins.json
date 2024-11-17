@@ -5,7 +5,8 @@
   "mixins": [
     "FoxEntityMateGoalMixin",
     "FoxEntityMixin",
-    "FoxTypeMixin"
+    "FoxTypeMixin",
+    "AnimalEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

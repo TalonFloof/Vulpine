@@ -1,0 +1,12 @@
+{
+  "values": [
+    "minecraft:netherrack",
+    "minecraft:sculk",
+    "minecraft:sculk_vein",
+    "minecraft:end_stone",
+    "#minecraft:nylium",
+    "minecraft:soul_sand",
+    "minecraft:soul_soil",
+    "#minecraft:sand"
+  ]
+}

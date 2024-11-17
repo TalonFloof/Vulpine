@@ -3,27 +3,30 @@ package sh.talonfox.vulpine.mixin;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.BiomeTags;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeKeys;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import sh.talonfox.vulpine.FoxVariantSelector;
 import sh.talonfox.vulpine.Vulpine;
 
 import java.util.UUID;
@@ -47,17 +50,17 @@ public abstract class FoxEntityMixin extends AnimalEntity {
     }
 
     @Inject(at = @At("TAIL"), method = "initDataTracker", locals = LocalCapture.CAPTURE_FAILHARD)
-    protected void addTameProgressTracker(DataTracker.Builder builder, CallbackInfo ci) {
+    protected void vulpine$addTameProgressTracker(DataTracker.Builder builder, CallbackInfo ci) {
         builder.add(Vulpine.TAME_PROGRESS, 0);
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-    public void tameProgressSave(NbtCompound nbt, CallbackInfo ci) {
+    public void vulpine$tameProgressSave(NbtCompound nbt, CallbackInfo ci) {
         nbt.putInt("TameProgress", ((FoxEntity) (Object) this).getDataTracker().get(Vulpine.TAME_PROGRESS));
     }
 
     @Unique
-    public ActionResult interactMob(PlayerEntity player, Hand hand) {
+    public ActionResult vulpine$interactMob(PlayerEntity player, Hand hand) {
         ActionResult actionResult = super.interactMob(player,hand);
         if(actionResult.isAccepted()) return actionResult;
         UUID uuid = ((FoxEntity)(Object)this).getDataTracker().get(OWNER).orElse(null);
@@ -70,13 +73,13 @@ public abstract class FoxEntityMixin extends AnimalEntity {
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-    public void tameProgressLoad(NbtCompound nbt, CallbackInfo ci) {
+    public void vulpine$tameProgressLoad(NbtCompound nbt, CallbackInfo ci) {
         ((FoxEntity) (Object) this).getDataTracker().set(Vulpine.TAME_PROGRESS,nbt.getInt("TameProgress"));
         Vulpine.addFoxGoals(((FoxEntity) (Object) this),nbt.getInt("TameProgress"));
     }
 
     @Inject(method = "initGoals", at = @At("HEAD"), cancellable = true)
-    public void addAiGoals(CallbackInfo ci) {
+    public void vulpine$addAiGoals(CallbackInfo ci) {
         ((FoxEntity) (Object) this).followChickenAndRabbitGoal = new ActiveTargetGoal<AnimalEntity>(((FoxEntity) (Object) this), AnimalEntity.class, 10, false, false, entity -> ((FoxEntity) (Object) this).getDataTracker().get(Vulpine.TAME_PROGRESS) < 3 && (entity instanceof ChickenEntity || entity instanceof RabbitEntity));
         ((FoxEntity) (Object) this).followBabyTurtleGoal = new ActiveTargetGoal<TurtleEntity>(((FoxEntity) (Object) this), TurtleEntity.class, 10, false, false, entity -> TurtleEntity.BABY_TURTLE_ON_LAND_FILTER.test((LivingEntity)entity) && ((FoxEntity) (Object) this).getDataTracker().get(Vulpine.TAME_PROGRESS) < 3);
         ((FoxEntity) (Object) this).followFishGoal = new ActiveTargetGoal<FishEntity>(((FoxEntity) (Object) this), FishEntity.class, 20, false, false, entity -> entity instanceof SchoolingFishEntity && ((FoxEntity) (Object) this).getDataTracker().get(Vulpine.TAME_PROGRESS) < 3);
@@ -95,36 +98,16 @@ public abstract class FoxEntityMixin extends AnimalEntity {
     }
 
     @Redirect(method = "initialize", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/passive/FoxEntity$Type;fromBiome(Lnet/minecraft/registry/entry/RegistryEntry;)Lnet/minecraft/entity/passive/FoxEntity$Type;"))
-    public FoxEntity.Type setFoxVariant(RegistryEntry<Biome> biome) {
+    public FoxEntity.Type vulpine$setFoxVariant(RegistryEntry<Biome> biome) {
         FoxEntity fox = FoxEntity.class.cast(this);
         Identifier id = biome.getKey().get().getValue();
-        if(id.equals(BiomeKeys.OLD_GROWTH_PINE_TAIGA.getValue()) || id.equals(BiomeKeys.OLD_GROWTH_SPRUCE_TAIGA.getValue())) {
-            int variant = Random.create().nextInt(9);
-            if(variant < 5) {
-                return Vulpine.GRAY_FOX;
-            } else if(variant < 7) {
-                return FoxEntity.Type.RED;
-            } else if(variant < 8) {
-                return Vulpine.SILVER_FOX;
-            } else {
-                return Vulpine.CROSS_FOX;
-            }
-        } else if(biome.isIn(BiomeTags.SPAWNS_SNOW_FOXES)) {
-            int variant = Random.create().nextInt(5);
-            if(variant < 4) {
-                return FoxEntity.Type.SNOW;
-            } else {
-                return Vulpine.SILVER_FOX;
-            }
-        } else {
-            int variant = Random.create().nextInt(9);
-            if(variant < 5) {
-                return FoxEntity.Type.RED;
-            } else if(variant < 7) {
-                return Vulpine.SILVER_FOX;
-            } else {
-                return Vulpine.CROSS_FOX;
-            }
-        }
+        return FoxVariantSelector.selectFoxVariant(fox,biome);
+    }
+
+    @Inject(method = "canSpawn", at = @At("HEAD"), cancellable = true)
+    private static void vulpine$overideFoxSpawnRestrictions(EntityType<FoxEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random, CallbackInfoReturnable<Boolean> cir){
+        boolean validPos = world.getBlockState(pos.down()).isIn(BlockTags.FOXES_SPAWNABLE_ON);
+        cir.cancel();
+        cir.setReturnValue(validPos);
     }
 }
