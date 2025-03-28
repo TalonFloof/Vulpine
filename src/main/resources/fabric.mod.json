@@ -5,23 +5,23 @@
 	"name": "Vulpine",
 	"description": "Adds Fox Taming and New Fox Variants!",
 	"authors": [
-		"TalonFox"
+		"TalonFloof"
 	],
 	"contact": {
-		"sources": "https://github.com/TalonFox/Vulpine"
+		"sources": "https://github.com/TalonFloof/Vulpine"
 	},
 	"license": "MIT",
 	"icon": "assets/vulpine/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-          "sh.talonfox.vulpine.Vulpine"
+			"sh.talonfloof.vulpine.Vulpine"
 		],
 		"client": [
-			"sh.talonfox.vulpine.VulpineClient"
+			"sh.talonfloof.vulpine.VulpineClient"
 		],
 		"fabric-datagen": [
-			"sh.talonfox.vulpine.datagen.ModDataGenerator"
+			"sh.talonfloof.vulpine.datagen.ModDataGenerator"
 		]
 	},
 	"mixins": [

@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "sh.talonfox.vulpine.mixin",
+  "package": "sh.talonfloof.vulpine.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "FoxEntityMateGoalMixin",

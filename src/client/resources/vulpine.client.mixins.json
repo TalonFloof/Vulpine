@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "sh.talonfox.vulpine.mixin.client",
+  "package": "sh.talonfloof.vulpine.mixin.client",
   "compatibilityLevel": "JAVA_21",
   "client": [
     "FoxEntityModelMixin",
