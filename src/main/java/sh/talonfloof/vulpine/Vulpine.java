@@ -1,5 +1,6 @@
 package sh.talonfloof.vulpine;
 
+import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
 import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.entity.ai.goal.FleeEntityGoal;
@@ -16,6 +17,8 @@ import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.recipe.Ingredient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sh.talonfloof.vulpine.config.VulpineConfig;
+import sh.talonfloof.vulpine.registry.ItemRegistration;
 import sh.talonfloof.vulpine.registry.ModMobTags;
 import sh.talonfloof.vulpine.world.generation.ModEntityGeneration;
 
@@ -47,6 +50,8 @@ public class Vulpine implements ModInitializer {
 	public static FoxEntity.Type PINK_FOX = null;
 
 	public static ArrayList<FoxEntity.Type> foxes = new ArrayList<>();
+
+	public static VulpineConfig config = ConfigApiJava.registerAndLoadConfig(VulpineConfig::new);
 
 	public static void addFoxes() {
 
@@ -95,6 +100,18 @@ public class Vulpine implements ModInitializer {
 		FoxVariantSelector.TAIGA_VARIANT.add(RED_FOX); //Default fox is mostly taiga variant.
 		FoxVariantSelector.TAIGA_VARIANT.add(ALBINO_FOX); //Default fox is mostly taiga variant.
 		FoxVariantSelector.DEFAULT_VARIANT.remove(TALON);
+
+		if(!config.spawning.enableBrightColorFoxes.get()) {
+			FoxVariantSelector.DEFAULT_VARIANT.remove(PINK_FOX);
+			FoxVariantSelector.SNOW_VARIANT.remove(BLUE_FOX);
+		}
+		if(!config.spawning.enableAlternateFoxVariants.get()) {
+			FoxVariantSelector.DEFAULT_VARIANT.remove(RED_FOX);
+			FoxVariantSelector.TAIGA_VARIANT.remove(GRAY2_FOX);
+			FoxVariantSelector.SNOW_VARIANT.remove(BLACK_FOX);
+		}
+
+		ItemRegistration.register();
 	}
 
 

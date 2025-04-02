@@ -3,6 +3,8 @@ package sh.talonfloof.vulpine.world.generation;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraft.entity.*;
+import sh.talonfloof.vulpine.FoxVariantSelector;
+import sh.talonfloof.vulpine.Vulpine;
 import sh.talonfloof.vulpine.registry.ModMobTags;
 
 /**
@@ -14,17 +16,25 @@ public class ModEntityGeneration {
     public static void addFoxSpawns(){
         //Only add biome where foxes don't naturally spawn.
 
-        BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_DESERT_FOX), SpawnGroup.CREATURE,
-                EntityType.FOX,1,2,4);
+        if(Vulpine.config.spawning.enableFennecFoxes.get()) {
+            BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_DESERT_FOX), SpawnGroup.CREATURE,
+                    EntityType.FOX, 1, 2, 4);
+        }
 
-        BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_NETHER_FOX), SpawnGroup.MONSTER,
-                EntityType.FOX,1,1,2);
+        if(Vulpine.config.spawning.enableNetherFoxes.get()) {
+            BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_NETHER_FOX), SpawnGroup.MONSTER,
+                    EntityType.FOX, 1, 1, 2);
+        }
 
-        BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_ENDER_FOX), SpawnGroup.MONSTER,
-                EntityType.FOX,1,1,2);
+        if(Vulpine.config.spawning.enableEndFoxes.get()) {
+            BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_ENDER_FOX), SpawnGroup.MONSTER,
+                    EntityType.FOX, 1, 1, 2);
+        }
 
-        BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_SCULK_FOX), SpawnGroup.MONSTER,
-                EntityType.FOX,10,1,2);
+        if(Vulpine.config.spawning.enableSculkFoxes.get()) {
+            BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_SCULK_FOX), SpawnGroup.MONSTER,
+                    EntityType.FOX, 10, 1, 2);
+        }
 
         BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_ZOMBIE_FOX), SpawnGroup.MONSTER,
                 EntityType.FOX,10,1,2);
