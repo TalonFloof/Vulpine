@@ -11,6 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -59,8 +60,8 @@ public abstract class FoxEntityMixin extends AnimalEntity {
         nbt.putInt("TameProgress", ((FoxEntity) (Object) this).getDataTracker().get(Vulpine.TAME_PROGRESS));
     }
 
-    @Unique
-    public ActionResult vulpine$interactMob(PlayerEntity player, Hand hand) {
+    @Override
+    public ActionResult interactMob(PlayerEntity player, Hand hand) { // Note for anyone in the future, DO NOT CHANGE THE NAME! This is intentionally creating an override on the FoxEntity function for it
         ActionResult actionResult = super.interactMob(player,hand);
         if(actionResult.isAccepted()) return actionResult;
         UUID uuid = ((FoxEntity)(Object)this).getDataTracker().get(OWNER).orElse(null);

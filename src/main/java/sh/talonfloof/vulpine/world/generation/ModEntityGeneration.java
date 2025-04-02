@@ -15,21 +15,21 @@ public class ModEntityGeneration {
         //Only add biome where foxes don't naturally spawn.
 
         BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_DESERT_FOX), SpawnGroup.CREATURE,
-                EntityType.FOX,35,2,4);
+                EntityType.FOX,1,2,4);
 
         BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_NETHER_FOX), SpawnGroup.MONSTER,
-                EntityType.FOX,35,2,4);
+                EntityType.FOX,1,1,2);
 
         BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_ENDER_FOX), SpawnGroup.MONSTER,
-                EntityType.FOX,5,2,4);
+                EntityType.FOX,1,1,2);
 
         BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_SCULK_FOX), SpawnGroup.MONSTER,
                 EntityType.FOX,10,1,2);
 
         BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_ZOMBIE_FOX), SpawnGroup.MONSTER,
-                EntityType.FOX,25,1,2);
+                EntityType.FOX,10,1,2);
 
         BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_SKELETON_FOX), SpawnGroup.MONSTER,
-                EntityType.FOX,25,1,2);
+                EntityType.FOX,10,1,2);
     }
 }
