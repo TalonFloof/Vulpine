@@ -54,7 +54,7 @@ dependencies {
 
 	// modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
 	modImplementation "me.fzzyhmstrs:fzzy_config:${project.fzzy_config_version}"
-	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+	modRuntimeOnly("com.terraformersmc:modmenu:${project.modmenu_version}")
 }
 
 processResources {

@@ -32,6 +32,7 @@ import sh.talonfloof.vulpine.Vulpine;
 
 import java.util.UUID;
 
+import static net.minecraft.entity.passive.FoxEntity.NOTICEABLE_PLAYER_FILTER;
 import static net.minecraft.entity.passive.FoxEntity.OWNER;
 
 /*
@@ -92,6 +93,9 @@ public abstract class FoxEntityMixin extends AnimalEntity {
         ((FoxEntity) (Object) this).goalSelector.add(7, ((FoxEntity) (Object) this).new AttackGoal((double) 1.2f, true));
         ((FoxEntity) (Object) this).goalSelector.add(4, new FleeEntityGoal<WolfEntity>(((FoxEntity) (Object) this), WolfEntity.class, 8.0f, 1.6, 1.4, entity -> !((WolfEntity) entity).isTamed() && !((FoxEntity) (Object) this).isAggressive()));
         ((FoxEntity) (Object) this).goalSelector.add(4, new FleeEntityGoal<PolarBearEntity>(((FoxEntity) (Object) this), PolarBearEntity.class, 8.0f, 1.6, 1.4, entity -> !((FoxEntity) (Object) this).isAggressive()));
+        this.goalSelector.add(4, new FleeEntityGoal(((FoxEntity) (Object) this), PlayerEntity.class, 16.0F, 1.6, 1.4, (entity) -> {
+            return NOTICEABLE_PLAYER_FILTER.test((Entity)entity) && !((FoxEntity) (Object) this).canTrust(((Entity)entity).getUuid()) && !((FoxEntity) (Object) this).isAggressive();
+        }));
         ((FoxEntity) (Object) this).goalSelector.add(10, new PounceAtTargetGoal(((FoxEntity) (Object) this), 0.4f));
         ((FoxEntity) (Object) this).goalSelector.add(11, new WanderAroundFarGoal(((FoxEntity) (Object) this), 1.0));
         ((FoxEntity) (Object) this).targetSelector.add(3, ((FoxEntity) (Object) this).new DefendFriendGoal(LivingEntity.class, false, false, entity -> FoxEntity.JUST_ATTACKED_SOMETHING_FILTER.test((Entity) entity) && !((FoxEntity) (Object) this).canTrust(entity.getUuid())));
