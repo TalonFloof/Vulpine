@@ -1,5 +1,7 @@
 package sh.talonfloof.vulpine.mixin;
 
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -8,6 +10,7 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.BlockTags;
@@ -63,6 +66,14 @@ public abstract class FoxEntityMixin extends AnimalEntity {
 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) { // Note for anyone in the future, DO NOT CHANGE THE NAME! This is intentionally creating an override on the FoxEntity function for it
+        ItemStack itemStack = player.getStackInHand(hand);
+        if (((FoxEntity) (Object) this).getDataTracker().get(Vulpine.TAME_PROGRESS) >= 4 && this.isBreedingItem(itemStack) && this.getHealth() < this.getMaxHealth()) {
+            itemStack.decrementUnlessCreative(1, player);
+            FoodComponent foodComponent = (FoodComponent) itemStack.get(DataComponentTypes.FOOD);
+            float f = foodComponent != null ? (float) foodComponent.nutrition() : 1.0F;
+            this.heal(2.0F * f);
+            return ActionResult.success(this.getWorld().isClient());
+        }
         ActionResult actionResult = super.interactMob(player,hand);
         if(actionResult.isAccepted()) return actionResult;
         UUID uuid = ((FoxEntity)(Object)this).getDataTracker().get(OWNER).orElse(null);

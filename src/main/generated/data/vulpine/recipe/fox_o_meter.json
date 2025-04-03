@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "g": {
+      "item": "minecraft:tinted_glass"
+    },
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "n": {
+      "item": "minecraft:iron_nugget"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "nrg",
+    " ir",
+    "i n"
+  ],
+  "result": {
+    "count": 1,
+    "id": "vulpine:fox_o_meter"
+  }
+}
