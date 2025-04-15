@@ -22,24 +22,24 @@ public class ModEntityGeneration {
         }
 
         if(Vulpine.config.spawning.enableNetherFoxes.get()) {
-            BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_NETHER_FOX), SpawnGroup.MONSTER,
+            BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_NETHER_FOX), SpawnGroup.CREATURE,
                     EntityType.FOX, 1, 1, 2);
         }
 
         if(Vulpine.config.spawning.enableEndFoxes.get()) {
-            BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_ENDER_FOX), SpawnGroup.MONSTER,
+            BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_ENDER_FOX), SpawnGroup.CREATURE,
                     EntityType.FOX, 1, 1, 2);
         }
 
         if(Vulpine.config.spawning.enableSculkFoxes.get()) {
-            BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_SCULK_FOX), SpawnGroup.MONSTER,
+            BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_SCULK_FOX), SpawnGroup.CREATURE,
                     EntityType.FOX, 10, 1, 2);
         }
 
-        BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_ZOMBIE_FOX), SpawnGroup.MONSTER,
+        BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_ZOMBIE_FOX), SpawnGroup.CREATURE,
                 EntityType.FOX,10,1,2);
 
-        BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_SKELETON_FOX), SpawnGroup.MONSTER,
+        BiomeModifications.addSpawn(BiomeSelectors.tag(ModMobTags.HAS_SKELETON_FOX), SpawnGroup.CREATURE,
                 EntityType.FOX,10,1,2);
     }
 }

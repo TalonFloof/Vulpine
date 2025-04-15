@@ -7,6 +7,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
+import org.jetbrains.annotations.NotNull;
 import sh.talonfloof.vulpine.registry.ModMobTags;
 
 import java.util.ArrayList;
@@ -66,35 +67,37 @@ public abstract class FoxVariantSelector {
         return shouldSpawnMonster & rand.nextInt(100)<15; //15% to spawn monster version at night in overwolrd.
     }
 
-    public static FoxEntity.Type selectFoxVariant(FoxEntity foxEntity, RegistryEntry<Biome> foxBiome){
+    public static FoxEntity.Type selectFoxVariant(@NotNull FoxEntity foxEntity, RegistryEntry<Biome> foxBiome){
 
-        if(shouldSpawnMonster(foxEntity.getEntityWorld()))
+        if (shouldSpawnMonster(foxEntity.getEntityWorld())) {
             return randomMonsterVariant();
+        }
 
-        if(foxBiome.isIn(ModMobTags.HAS_NETHER_FOX)){
+        if (foxBiome.isIn(ModMobTags.HAS_NETHER_FOX)){
             return randomNetherVariant();
         }
 
-        if(foxBiome.isIn(ModMobTags.HAS_DESERT_FOX)){
+        if (foxBiome.isIn(ModMobTags.HAS_DESERT_FOX)){
             return randomDesertVariant();
         }
 
-        if(foxBiome.isIn(ModMobTags.HAS_SNOW_FOX)){
+        if (foxBiome.isIn(ModMobTags.HAS_SNOW_FOX)){
                 return randomSnowVariant();
         }
 
-        if(foxBiome.isIn(ModMobTags.HAS_TAIGA_FOX)){
-            if(foxBiome.isIn(ConventionalBiomeTags.IS_SNOWY))
-                return randomSnowVariant();
-            else
+        if (foxBiome.isIn(ModMobTags.HAS_TAIGA_FOX)){
+            if (!foxBiome.isIn(ConventionalBiomeTags.IS_SNOWY)) {
                 return randomTaigaVariant();
+            } else {
+                return randomSnowVariant();
+            }
         }
 
-        if(foxBiome.isIn(ModMobTags.HAS_SCULK_FOX)){
+        if (foxBiome.isIn(ModMobTags.HAS_SCULK_FOX)){
             return randomSculkVariant();
         }
 
-        if(foxBiome.isIn(ModMobTags.HAS_ENDER_FOX)){
+        if (foxBiome.isIn(ModMobTags.HAS_ENDER_FOX)){
             return randomEnderVariant();
         }
 

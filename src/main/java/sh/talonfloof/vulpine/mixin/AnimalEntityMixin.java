@@ -11,12 +11,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AnimalEntity.class)
 public abstract class AnimalEntityMixin {
-
-    //Overide light spawn restriction of foxes
+    //Override light spawn restriction of foxes
     @Inject(method = "getPathfindingFavor", at = @At("HEAD"), cancellable = true)
-    public void vulpine$overideLightLevel(BlockPos pos, WorldView world, CallbackInfoReturnable<Float> cir){
-        AnimalEntity animal = (AnimalEntity) (Object)this;
-        if(animal instanceof FoxEntity foxEntity){
+    public void vulpine$overrideLightLevel(BlockPos pos, WorldView world, CallbackInfoReturnable<Float> cir){
+        var animal = (AnimalEntity) (Object) this;
+        if (animal instanceof FoxEntity){
             cir.setReturnValue(10.f);
             cir.cancel();
         }

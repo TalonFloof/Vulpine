@@ -24,10 +24,10 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .input('r', Items.REDSTONE)
                 .input('i', Items.IRON_INGOT)
                 .input('g', Blocks.TINTED_GLASS)
-                .criterion(FabricRecipeProvider.hasItem(Items.IRON_NUGGET),FabricRecipeProvider.conditionsFromItem(Items.IRON_NUGGET))
-                .criterion(FabricRecipeProvider.hasItem(Items.REDSTONE),FabricRecipeProvider.conditionsFromItem(Items.REDSTONE))
-                .criterion(FabricRecipeProvider.hasItem(Items.IRON_INGOT),FabricRecipeProvider.conditionsFromItem(Items.IRON_INGOT))
-                .criterion(FabricRecipeProvider.hasItem(Blocks.TINTED_GLASS),FabricRecipeProvider.conditionsFromItem(Blocks.TINTED_GLASS))
+                .criterion(hasItem(Items.IRON_NUGGET), conditionsFromItem(Items.IRON_NUGGET))
+                .criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE))
+                .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                .criterion(hasItem(Blocks.TINTED_GLASS), conditionsFromItem(Blocks.TINTED_GLASS))
                 .offerTo(exporter);
     }
 }

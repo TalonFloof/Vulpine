@@ -44,7 +44,7 @@ public class FoxSitGoal extends Goal {
         if (this.fop.squaredDistanceTo(livingEntity) < 144.0 && livingEntity.getAttacker() != null) {
             return false;
         }
-        owner = livingEntity;
+        this.owner = livingEntity;
         return this.fop.isSitting();
     }
 
