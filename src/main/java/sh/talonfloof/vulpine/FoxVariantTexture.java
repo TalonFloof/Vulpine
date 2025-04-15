@@ -18,10 +18,10 @@ public class FoxVariantTexture {
     }
 
     public static Identifier getTexture(FoxEntity fox) {
-        if("Talon".equals(fox.getName().getString())) {
+        if ("Talon".equals(fox.getName().getString())) {
             return foxTextures.get(Vulpine.TALON).getTextureIdentifier(fox.isSleeping());
         }
-        if(foxTextures.containsKey(fox.getVariant())) {
+        if (foxTextures.containsKey(fox.getVariant())) {
             return foxTextures.get(fox.getVariant()).getTextureIdentifier(fox.isSleeping());
         }
         return null;

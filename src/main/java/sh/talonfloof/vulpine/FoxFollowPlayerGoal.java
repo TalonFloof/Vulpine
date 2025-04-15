@@ -28,7 +28,7 @@ public class FoxFollowPlayerGoal extends Goal {
     private float oldWaterPathfindingPenalty;
     public FoxFollowPlayerGoal(FoxEntity entity, double speed, float minDistance, float maxDistance) {
         this.fop = entity;
-        this.navigation = fop.getNavigation();
+        this.navigation = this.fop.getNavigation();
         this.speed = speed;
         this.minDistance = minDistance;
         this.maxDistance = maxDistance;
@@ -50,7 +50,7 @@ public class FoxFollowPlayerGoal extends Goal {
         if (this.fop.squaredDistanceTo(livingEntity) < (double)(this.minDistance * this.minDistance)) {
             return false;
         }
-        owner = livingEntity;
+        this.owner = livingEntity;
         return true;
     }
 
@@ -115,7 +115,7 @@ public class FoxFollowPlayerGoal extends Goal {
     }
 
     private boolean canTeleportTo(BlockPos pos) {
-        PathNodeType pathNodeType = LandPathNodeMaker.getLandNodeType(fop, pos.mutableCopy());
+        PathNodeType pathNodeType = LandPathNodeMaker.getLandNodeType(this.fop, pos.mutableCopy());
         if (pathNodeType != PathNodeType.WALKABLE) {
             return false;
         }
